@@ -203,12 +203,29 @@ function extractEmails(str) {
  *
  */
 function getRectangleString(width, height) {
-  result = '';
-
-  for(let i = 0; i < height; i++) {
-
-
-
+  let result = '';
+  for (let i = 0; i < height; i += 1) {
+    for (let j = 0; j < width; j += 1) {
+      let symbol = '';
+      if (i === 0 && j === 0) {
+        symbol = '┌';
+      } else if ((i === 0 || i === height - 1) && j > 0 && j < width - 1) {
+        symbol = '─';
+      } else if (i === 0 && j === width - 1) {
+        symbol = '┐\n';
+      } else if (i > 0 && i < height - 1 && j === 0) {
+        symbol = '│';
+      } else if (i > 0 && i < height - 1 && j === width - 1) {
+        symbol = '│\n';
+      } else if (i > 0 && i < height - 1 && j > 0 && j < width - 1) {
+        symbol = ' ';
+      } else if (i === height - 1 && j === 0) {
+        symbol = '└';
+      } else if (i === height - 1 && j === width - 1) {
+        symbol = '┘\n';
+      }
+      result += symbol;
+    }
   }
   return result;
 }
@@ -230,8 +247,25 @@ function getRectangleString(width, height) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  let encodeStr = '';
+
+  str.split('').forEach((element) => {
+    const indexAlphabet = alphabet.indexOf(element.toUpperCase()) + 13;
+    const isUperCase = (element.toUpperCase() === element);
+
+    if (indexAlphabet < 13) {
+      encodeStr += element;
+    } else if (indexAlphabet < alphabet.length) {
+      encodeStr += isUperCase ? (alphabet[indexAlphabet]) : alphabet[indexAlphabet].toLowerCase();
+    } else {
+      encodeStr += isUperCase ? (alphabet[indexAlphabet % alphabet.length])
+        : alphabet[indexAlphabet % alphabet.length].toLowerCase();
+    }
+  });
+
+  return encodeStr;
 }
 
 /**

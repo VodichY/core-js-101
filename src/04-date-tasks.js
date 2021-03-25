@@ -53,8 +53,18 @@ function parseDataFromIso8601(value) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const fullYear = date.getFullYear();
+  if (fullYear % 4 !== 0) {
+    return false;
+  }
+  if (fullYear % 100 !== 0) {
+    return true;
+  }
+  if (fullYear % 400 === 0) {
+    return true;
+  }
+  return false;
 }
 
 
@@ -73,8 +83,36 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  let result = '';
+  const value = endDate - startDate;
+  const HH = Math.trunc(value / 3600000);
+  const mm = Math.trunc((value - (HH * 3600000)) / 60000);
+  const ss = Math.trunc((value - (HH * 3600000) - (mm * 60000)) / 1000);
+  const sss = (value - HH * 3600000 - mm * 60000 - ss * 1000);
+  if (HH < 10) {
+    result += `0${HH}:`;
+  } else {
+    result += `${HH}:`;
+  }
+  if (mm < 10) {
+    result += `0${mm}:`;
+  } else {
+    result += `${mm}:`;
+  }
+  if (ss < 10) {
+    result += `0${ss}.`;
+  } else {
+    result += `${ss}.`;
+  }
+  if (sss < 10) {
+    result += `00${sss}`;
+  } else if (sss < 100) {
+    result += `0${sss}`;
+  } else {
+    result += sss;
+  }
+  return result;
 }
 
 
@@ -94,8 +132,12 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  const HH = date.getUTCHours();
+  const mm = date.getUTCMinutes();
+  let angle = (HH + (mm / 60)) * 30 - mm * 6;
+  angle = angle > 180 ? Math.abs(360 - angle) : angle;
+  return angle * (Math.PI / 180);
 }
 
 

@@ -116,156 +116,58 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
-
-function selectorBase(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
-function ElementSelector(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
-function IdSelector(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
-
-function ClassSelector(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
-
-function AttrSelector(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
-function PseudoClassSelector(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
-function PseudoElementSelector(val, builder) {
-  this.value = val;
-  if (builder instanceof selectorBase) {
-    this.prevValue = builder.stringify();
-  } else {
-    this.prevValue = '';
-  }
-}
 const cssSelectorBuilder = {
+
+  result: '',
+
   element(value) {
-    const selector = new ElementSelector(value, this);
-    return selector;
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = this.result + value;
+    return objCssSelectorBuilder;
   },
 
   id(value) {
-    const selector = new IdSelector(value, this);
-    return selector;
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = `${this.result}#${value}`;
+    return objCssSelectorBuilder;
   },
 
   class(value) {
-    const selector = new ClassSelector(value, this);
-    return selector;
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = `${this.result}.${value}`;
+    return objCssSelectorBuilder;
   },
 
   attr(value) {
-    const selector = new AttrSelector(value, this);
-    return selector;
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = `${this.result}[${value}]`;
+    return objCssSelectorBuilder;
   },
 
   pseudoClass(value) {
-    const selector = new PseudoClassSelector(value, this);
-    return selector;
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = `${this.result}:${value}`;
+    return objCssSelectorBuilder;
   },
 
   pseudoElement(value) {
-    const selector = new PseudoElementSelector(value, this);
-    return selector;
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = `${this.result}::${value}`;
+    return objCssSelectorBuilder;
   },
 
   combine(selector1, combinator, selector2) {
-    return {
-      stringify() {
-        return `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
-      },
-    };
+    const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
+    objCssSelectorBuilder.result = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return objCssSelectorBuilder;
   },
+
+  stringify() {
+    return this.result;
+  },
+
 };
-function selectorsOrderError() {
-  throw new Error(/Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element/);
-}
-function multipleSelectorsError() {
-  throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
-}
-selectorBase.prototype = cssSelectorBuilder;
-selectorBase.prototype.currentValueStr = function () {
-  return `${this.value}`;
-};
-selectorBase.prototype.stringify = function () {
-  return `${this.prevValue}${this.currentValueStr()}`;
-};
-ElementSelector.prototype = Object.create(selectorBase.prototype);
-ElementSelector.prototype.element = multipleSelectorsError;
-IdSelector.prototype = Object.create(selectorBase.prototype);
-IdSelector.prototype.currentValueStr = function () {
-  return `#${this.value}`;
-};
-IdSelector.prototype.id = multipleSelectorsError;
-IdSelector.prototype.element = selectorsOrderError;
-ClassSelector.prototype = Object.create(selectorBase.prototype);
-ClassSelector.prototype.currentValueStr = function () {
-  return `.${this.value}`;
-};
-ClassSelector.prototype.element = selectorsOrderError;
-ClassSelector.prototype.id = selectorsOrderError;
-AttrSelector.prototype = Object.create(selectorBase.prototype);
-AttrSelector.prototype.currentValueStr = function () {
-  return `[${this.value}]`;
-};
-AttrSelector.prototype.element = selectorsOrderError;
-AttrSelector.prototype.id = selectorsOrderError;
-AttrSelector.prototype.class = selectorsOrderError;
-PseudoClassSelector.prototype = Object.create(selectorBase.prototype);
-PseudoClassSelector.prototype.currentValueStr = function () {
-  return `:${this.value}`;
-};
-PseudoClassSelector.prototype.element = selectorsOrderError;
-PseudoClassSelector.prototype.id = selectorsOrderError;
-PseudoClassSelector.prototype.class = selectorsOrderError;
-PseudoClassSelector.prototype.attr = selectorsOrderError;
-PseudoElementSelector.prototype = Object.create(selectorBase.prototype);
-PseudoElementSelector.prototype.currentValueStr = function () {
-  return `::${this.value}`;
-};
-PseudoElementSelector.prototype.pseudoElement = multipleSelectorsError;
-PseudoElementSelector.prototype.element = selectorsOrderError;
-PseudoElementSelector.prototype.id = selectorsOrderError;
-PseudoElementSelector.prototype.class = selectorsOrderError;
-PseudoElementSelector.prototype.attr = selectorsOrderError;
-PseudoElementSelector.prototype.pseudoClass = selectorsOrderError;
+
 
 module.exports = {
   Rectangle,

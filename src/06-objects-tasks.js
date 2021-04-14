@@ -121,38 +121,50 @@ const cssSelectorBuilder = {
   result: '',
 
   element(value) {
+    this.error(1);
     const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
     objCssSelectorBuilder.result = this.result + value;
+    objCssSelectorBuilder.i = 1;
     return objCssSelectorBuilder;
   },
 
   id(value) {
+    this.error(2);
     const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
     objCssSelectorBuilder.result = `${this.result}#${value}`;
+    objCssSelectorBuilder.i = 2;
     return objCssSelectorBuilder;
   },
 
   class(value) {
+    this.error(3);
     const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
     objCssSelectorBuilder.result = `${this.result}.${value}`;
+    objCssSelectorBuilder.i = 3;
     return objCssSelectorBuilder;
   },
 
   attr(value) {
+    this.error(4);
     const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
     objCssSelectorBuilder.result = `${this.result}[${value}]`;
+    objCssSelectorBuilder.i = 4;
     return objCssSelectorBuilder;
   },
 
   pseudoClass(value) {
+    this.error(5);
     const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
     objCssSelectorBuilder.result = `${this.result}:${value}`;
+    objCssSelectorBuilder.i = 5;
     return objCssSelectorBuilder;
   },
 
   pseudoElement(value) {
+    this.error(6);
     const objCssSelectorBuilder = Object.create(cssSelectorBuilder);
     objCssSelectorBuilder.result = `${this.result}::${value}`;
+    objCssSelectorBuilder.i = 6;
     return objCssSelectorBuilder;
   },
 
@@ -164,6 +176,11 @@ const cssSelectorBuilder = {
 
   stringify() {
     return this.result;
+  },
+
+  error(newi) {
+    if (this.i > newi) throw new Error('Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element');
+    if (this.i === newi && (this.i === 1 || this.i === 2 || this.i === 6)) throw new Error('Element, id and pseudo-element should not occur more then one time inside the selector');
   },
 
 };

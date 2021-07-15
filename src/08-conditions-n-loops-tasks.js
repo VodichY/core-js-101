@@ -353,14 +353,14 @@ function isBracketsBalanced(str) {
     '}': '{',
     '>': '<',
   };
-  str = str.split('');
-  for (let i = 1; i <= str.length; i++) {
-    if (str[i - 1] === obj[str[i]]) {
-      str.splice(i - 1, 2);
+  const specStr = str.split('');
+  for (let i = 1; i <= specStr.length; i += 1) {
+    if (specStr[i - 1] === obj[specStr[i]]) {
+      specStr.splice(i - 1, 2);
       i = i - 2 <= 0 ? 0 : i - 2;
     }
   }
-  return !str.length;
+  return !specStr.length;
 }
 
 
@@ -384,8 +384,20 @@ function isBracketsBalanced(str) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  let arrSpecNum = [];
+  let specNum = num;
+  if (n < 10) {
+    let balance = 0;
+    while (specNum > 0) {
+      balance = specNum % n;
+      arrSpecNum.push(balance);
+      specNum = ((specNum - balance) / n);
+    }
+  } else {
+    arrSpecNum = num.toString().split('').reverse();
+  }
+  return arrSpecNum.reverse().join('').toString();
 }
 
 

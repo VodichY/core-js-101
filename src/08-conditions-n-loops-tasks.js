@@ -506,8 +506,62 @@ function getMatrixProduct(m1, m2) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  for (let index = 0; index < position.length; index += 1) {
+    const element = position[index];
+    let curElement;
+    let curCount = 0;
+    for (let index1 = 0; index1 < element.length; index1 += 1) {
+      if (element[index1] !== undefined && (curElement === element[index1] || index1 === 0)) {
+        curCount += 1;
+      }
+      curElement = element[index1];
+      if (curCount === 3) {
+        return curElement;
+      }
+    }
+    let curArr;
+    curElement = undefined;
+    curCount = 0;
+    for (let index2 = 0; index2 < element.length; index2 += 1) {
+      curArr = position[index2];
+      if (curArr[index] !== undefined && (curElement === curArr[index] || index2 === 0)) {
+        curCount += 1;
+      }
+      curElement = curArr[index];
+      if (curCount === 3) {
+        return curElement;
+      }
+    }
+    curArr = undefined;
+    curElement = undefined;
+    curCount = 0;
+    for (let index3 = 0; index3 < element.length; index3 += 1) {
+      curArr = position[index3];
+      if (curArr[index3] !== undefined && (curElement === curArr[index3] || index3 === 0)) {
+        curCount += 1;
+      }
+      curElement = curArr[index3];
+      if (curCount === 3) {
+        return curElement;
+      }
+    }
+    const reversePosition = position.reverse();
+    curArr = undefined;
+    curElement = undefined;
+    curCount = 0;
+    for (let index3 = 0; index3 < element.length; index3 += 1) {
+      curArr = reversePosition[index3];
+      if (curArr[index3] !== undefined && (curElement === curArr[index3] || index3 === 0)) {
+        curCount += 1;
+      }
+      curElement = curArr[index3];
+      if (curCount === 3) {
+        return curElement;
+      }
+    }
+  }
+  return undefined;
 }
 
 
